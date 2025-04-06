@@ -37,7 +37,7 @@ const register = async (req, res) => {
       password: hashpasskey,
     });
     const token= generatetoken(newuser)
-    return res.json({ newuser, success: true ,token:token.accesstoken,tokenx:token.refreshtoken});
+    return res.json({message:"user registered successfully", newuser, success: true ,token:token.accesstoken,tokenx:token.refreshtoken});
   } catch (error) {
     return res.json({ message: "error try again please", success: false });
   }

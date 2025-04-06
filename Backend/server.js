@@ -7,7 +7,7 @@ connect()
 const app=express()
 corsoption={
     origin:'http://localhost:5173',
-    Credential:true,
+    credentials:true,
     methods:'GET.HEAD,PUT,DELETE,POST,PATCH',
     allowedHeaders:["Content-Type","Authorization"]
 
@@ -24,3 +24,5 @@ app.listen(process.env.PORT,()=>{
     console.log(`server running on ${process.env.PORT}`);
     
 })
+
+

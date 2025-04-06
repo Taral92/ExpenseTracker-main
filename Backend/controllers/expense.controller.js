@@ -14,7 +14,7 @@ const addexpense = async (req, res) => {
       category,
       userId,
     });
-    return res.json({ message: "your expense added", expense });
+    return res.json({ message: "your expense added", expense,success:true });
   } catch (error) {
     console.log(error);
 
