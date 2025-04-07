@@ -3,8 +3,10 @@ import z from './slice'
 import expenseslice from "./expenseslice";
 
  const store = configureStore({
-   reducer:z,
-   expense:expenseslice
+   reducer:{
+    z:z,
+    expenseslice:expenseslice
+   }
 });
 
 export default store;

@@ -3,13 +3,17 @@ import Navbar from "./Navbar";
 import Logo from "./shared/Logo";
 import Createexpense from "./Createexpense";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { useDispatch } from "react-redux";
+import { setcategory } from "./app/expenseslice";
+
 
 const Home = () => {
-  const changecategoryhandler=()=>{
-
+  const dispatch=useDispatch()
+  const changecategoryhandler=(value)=>{
+     dispatch(setcategory(value))
   }
-  const changeDonehandler=()=>{
-    
+  const changeDonehandler=(value)=>{
+    dispatch(setcategory(value))
   }
   return (
     <div>
@@ -44,9 +48,9 @@ const Home = () => {
           <SelectValue placeholder="Mark as Done" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="rent">Done</SelectItem>
-          <SelectItem value="food">Undone</SelectItem>
-          <SelectItem value="study">Both</SelectItem>
+          <SelectItem value="Done">Done</SelectItem>
+          <SelectItem value="Undone">Undone</SelectItem>
+          <SelectItem value="Both">Both</SelectItem>
          
         </SelectContent>
       </Select>
