@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const expenseslice = createSlice({
-  name: "expense",
+  name: "expenses",
   initialState: {
     category: "",
     MarkasDone: "",
+    expenses:[]
   },
   reducers: {
     setcategory: (state, action) => {
@@ -13,7 +14,10 @@ export const expenseslice = createSlice({
     setmarkasdone: (state, action) => {
       state.MarkasDone = action.payload;
     },
+    setexpenses:(state,action)=>{
+      state.expenses=action.payload
+    }
   },
 });
-export const { setcategory } = expenseslice.actions;
+export const { setcategory,setmarkasdone,setexpenses } = expenseslice.actions;
 export default expenseslice.reducer;

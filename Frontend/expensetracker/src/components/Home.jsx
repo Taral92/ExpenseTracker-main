@@ -4,16 +4,19 @@ import Logo from "./shared/Logo";
 import Createexpense from "./Createexpense";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { useDispatch } from "react-redux";
-import { setcategory } from "./app/expenseslice";
+import { setcategory, setmarkasdone } from "./app/expenseslice";
+import Expensetable from "./Expensetable";
+import Usegetexpenses from "@/hooks/Usegetexpenses";
 
 
 const Home = () => {
+    Usegetexpenses()
   const dispatch=useDispatch()
   const changecategoryhandler=(value)=>{
      dispatch(setcategory(value))
   }
   const changeDonehandler=(value)=>{
-    dispatch(setcategory(value))
+    dispatch(setmarkasdone(value))
   }
   return (
     <div>
@@ -54,7 +57,12 @@ const Home = () => {
          
         </SelectContent>
       </Select>
+
       </div>
+         
+         </div>
+         <div>
+         <Expensetable/>
          </div>
     </div>
   );
