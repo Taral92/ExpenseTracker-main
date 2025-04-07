@@ -9,12 +9,37 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useSelector } from "react-redux";
-import store from "./app/store";
+
 import { Checkbox } from "./ui/checkbox";
-import { current } from "@reduxjs/toolkit";
+
+
+import { Button } from "./ui/button";
+import { Edit2, Trash, Trash2 } from "lucide-react";
+import axios from "axios";
+import { toast } from "sonner";
+import { setexpenses } from "./app/expenseslice";
 
 export function Expensetable() {
   const { expenses } = useSelector((store) => store.expenseslice);
+  
+  console.log(expenses);
+  const handleremovedexpense=async(expenseeid)=>{
+      const res=await axios.post(`http://localhost:9000/api/user/delete/${expenseeid}`,{},
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      
+        )
+    console.log(res.data.message);
+    
+      if(res.data.success){
+        toast.success(res.data.message)
+        const filteredexpenses=expenses.filter(expense=>expense._id !== expenseeid)
+        setexpenses(filteredexpenses)
+      }
+
+  }
   const totalamount=expenses.reduce((acc,current)=> acc + Number(current.amount),0)
   const handlecheckedchange = (expenseid) => {};
   return (
@@ -23,11 +48,11 @@ export function Expensetable() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Mark as Done</TableHead>
-          <TableHead>Descripttion</TableHead>
+          <TableHead>Description</TableHead>
           <TableHead>Amount</TableHead>
           <TableHead>Category</TableHead>
           <TableHead>Date</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="text-left">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -35,23 +60,45 @@ export function Expensetable() {
           <TableRow key={expenses._id}>
             <Checkbox
               checked={expenses.done}
-              onCheckedChange={handlecheckedchange(expenses._id)}
+              onCheckedChange={handlecheckedchange()}
             />
             <TableCell className="font-medium">{expenses.description}</TableCell>
             
             <TableCell>{expenses.amount}</TableCell>
             <TableCell>{expenses.category}</TableCell>
             <TableCell>{expenses.createdAt?.split("T")[0]}</TableCell>
+            <TableCell className="text-left">
+                <div className="flex items-center justify-end gap-2">
+                   <Button onClick={()=>handleremovedexpense(expenses._id)} className=" rounded-full bg-gray-500 hover:border-transparent"  >
+                    <Trash2/>
+                   </Button>
+                   <Button className=" rounded-full bg-gray-500 hover:border-transparent"  >
+                    <Edit2/>
+                   </Button>
+                </div>
+            </TableCell>
+                
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">{totalamount}</TableCell>
+          <TableCell className="text-left">{totalamount}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
   );
 }
 export default Expensetable;
+
+
+
+
+
+
+
+
+
+
+
