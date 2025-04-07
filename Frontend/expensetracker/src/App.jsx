@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Home from "./components/Home";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
 const approuter = createBrowserRouter([
   {
@@ -24,9 +24,8 @@ const approuter = createBrowserRouter([
 const App = () => {
   return (
     <div className="">
-    
       <RouterProvider router={approuter} />
-      <Toaster/>
+      <Toaster />
     </div>
   );
 };
