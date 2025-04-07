@@ -9,14 +9,15 @@ const generatetoken = (user) => {
       expiresIn: "15m",
     }
   );
+
   const refreshtoken = jwt.sign(
     { userid: user._id, email: user.email },
     process.env.SECRETKEY,
     {
       expiresIn: "7d",
     }
-  )
-  return {accesstoken,refreshtoken}
+  );
+  return { accesstoken, refreshtoken };
 };
 const register = async (req, res) => {
   try {
@@ -28,7 +29,7 @@ const register = async (req, res) => {
     if (user) {
       return res.status(500).json({ message: "user alredy exists" });
     }
-    
+
     const hashpasskey = await bcrypt.hash(password, 10);
 
     const newuser = await UserModel.create({
@@ -36,8 +37,14 @@ const register = async (req, res) => {
       email,
       password: hashpasskey,
     });
-    const token= generatetoken(newuser)
-    return res.json({message:"user registered successfully", newuser, success: true ,token:token.accesstoken,tokenx:token.refreshtoken});
+    const token = generatetoken(newuser);
+    return res.json({
+      message: "user registered successfully",
+      newuser,
+      success: true,
+      token: token.accesstoken,
+      tokenx: token.refreshtoken,
+    });
   } catch (error) {
     return res.json({ message: "error try again please", success: false });
   }
@@ -46,7 +53,6 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
-    
 
     if (!user) {
       return res
@@ -57,52 +63,22 @@ const login = async (req, res) => {
     if (!passkey) {
       return res.json({ message: "incorrect password", success: false });
     }
-    const token=generatetoken(user)
-    res.status(200).cookie('tokens',token.accesstoken,{
-        httpOnly:true,
-        sameSite:"strict",
-    })
+    const token = generatetoken(user);
+    res.status(200).cookie("tokens", token.accesstoken, {
+      httpOnly: true,
+      sameSite: "strict",
+    });
   } catch (error) {
     return res.json({ message: "error while login" });
   }
   return res.json({ message: "user login successfully", success: true });
 };
-const logout=async(req,res,next)=>{
-     try {
-       res.clearCookie('tokens',null,{maxAge:0})
-       return res.json({messsage:'logout successfully',success:true})
-     } catch (error) {
-      console.log(error);
-      
-     }
-}
-module.exports = { register, login ,logout };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("tokens", null, { maxAge: 0 });
+    return res.json({ messsage: "logout successfully", success: true });
+  } catch (error) {
+    console.log(error);
+  }
+};
+module.exports = { register, login, logout };
