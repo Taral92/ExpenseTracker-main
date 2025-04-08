@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Checkbox } from "./ui/checkbox";
 
@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { setexpenses } from "./app/expenseslice";
 
 export function Expensetable() {
+  const dispatch=useDispatch()
   const { expenses } = useSelector((store) => store.expenseslice);
   
   console.log(expenses);
@@ -36,9 +37,12 @@ export function Expensetable() {
       if(res.data.success){
         toast.success(res.data.message)
         const filteredexpenses=expenses.filter(expense=>expense._id !== expenseeid)
-        setexpenses(filteredexpenses)
+        dispatch(setexpenses(filteredexpenses))
       }
 
+  }
+  if (!Array.isArray(expenses)) {
+    console.log("❌ expenses is not an array:", expenses);
   }
   const totalamount=expenses.reduce((acc,current)=> acc + Number(current.amount),0)
   const handlecheckedchange = (expenseid) => {};

@@ -22,10 +22,12 @@ import {
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import { setexpenses } from "./app/expenseslice";
 
+
 function Createexpense() {
+  const {expenses}=useSelector(store=>store.expenseslice)
   const [formdata, setformdata] = useState({
     description: "",
     amount: null,
@@ -36,12 +38,11 @@ function Createexpense() {
   const dispatch=useDispatch()
 
   const changehandler = (e) => {
-    const { name, value } = e.target;
-    setformdata((pre) => ({
-      ...pre,
-      [name]: value,
-    }));
-  };
+   const {name,value}=e.target
+   setformdata((pre)=>({
+     ...pre,
+     [name]:value
+   }))}
   const changecategoryhandler = (value) => {
     setformdata((pre) => ({
       ...pre,
@@ -49,7 +50,7 @@ function Createexpense() {
     }));
   };
   const submithandler = async (e) => {
-
+      
     e.preventDefault();
     console.log(formdata);
     try {
@@ -67,8 +68,8 @@ function Createexpense() {
         amount: null,
         category: "",
       })
-     
-      console.log(res.data);
+         
+      dispatch(setexpenses([...expenses, res.data.expense]));
 
       if (res.data.success) {
         
