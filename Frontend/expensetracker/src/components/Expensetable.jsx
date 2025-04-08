@@ -18,10 +18,12 @@ import { Edit2, Trash, Trash2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { setexpenses } from "./app/expenseslice";
+import { useState } from "react";
 
 export function Expensetable() {
   const dispatch=useDispatch()
   const { expenses } = useSelector((store) => store.expenseslice);
+  const [checked,setchecked]=useState({})
   
   console.log(expenses);
   const handleremovedexpense=async(expenseeid)=>{
@@ -42,10 +44,42 @@ export function Expensetable() {
 
   }
   if (!Array.isArray(expenses)) {
-    console.log("❌ expenses is not an array:", expenses);
+    console.log(" expenses is not an array:", expenses);
   }
-  const totalamount=expenses.reduce((acc,current)=> acc + Number(current.amount),0)
-  const handlecheckedchange = (expenseid) => {};
+  const totalamount=expenses.reduce((acc,current)=>{
+      if(!checked[current._id]){
+             return acc+current.amount
+      }
+      return acc
+  },0)
+  const handlecheckedchange = async(expenseid) => {
+         const newstatus=!checked[expenseid]
+         console.log(newstatus);
+         
+         try {
+
+          const  res=await axios.put(`http://localhost:9000/api/user/done/${expenseid}`,{
+            done:newstatus },{
+              headers:{
+                "Content-Type":"application/json"
+              },
+              withCredentials:true
+            })
+            if(res.data.success){
+              toast.success(res.data.message)
+              setchecked((pre)=>({
+                ...pre,[expenseid]:newstatus
+              }))
+              dispatch(setexpenses(
+                expenses.map(exp => exp._id === expenseid ? { ...exp, done: newstatus } : exp)
+              ))
+            }
+
+         } catch (error) {
+          console.log(error);
+          
+         }
+  };
   return (
     <Table>
       <TableCaption>A list of your recent expenses</TableCaption>
@@ -64,13 +98,13 @@ export function Expensetable() {
           <TableRow key={expenses._id}>
             <Checkbox
               checked={expenses.done}
-              onCheckedChange={handlecheckedchange()}
+              onCheckedChange={()=>handlecheckedchange(expenses._id)}
             />
-            <TableCell className="font-medium">{expenses.description}</TableCell>
+            <TableCell className={`${expenses.done ? 'line-through ' : ''}`}>{expenses.description}</TableCell>
             
-            <TableCell>{expenses.amount}</TableCell>
-            <TableCell>{expenses.category}</TableCell>
-            <TableCell>{expenses.createdAt?.split("T")[0]}</TableCell>
+            <TableCell className={`${expenses.done ? 'line-through ' : ''}`}>{expenses.amount}</TableCell>
+            <TableCell className={`${expenses.done ? 'line-through ' : ''}`}>{expenses.category}</TableCell>
+            <TableCell className={`${expenses.done ? 'line-through ' : ''}`}>{expenses.createdAt?.split("T")[0]}</TableCell>
             <TableCell className="text-left">
                 <div className="flex items-center justify-end gap-2">
                    <Button onClick={()=>handleremovedexpense(expenses._id)} className=" rounded-full bg-gray-500 hover:border-transparent"  >
