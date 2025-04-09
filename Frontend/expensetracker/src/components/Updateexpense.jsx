@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -19,23 +19,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Loader2 } from "lucide-react";
+import { Edit2, Loader2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useDispatch, useSelector} from "react-redux";
 import { setexpenses } from "./app/expenseslice";
+import { setselectedexpense } from "./app/slice";
 
 
-function Createexpense() {
-  const {expenses}=useSelector(store=>store.expenseslice)
+function Updateexpense() {
+  const {expenses,selectedexpense}=useSelector(store=>store.expenseslice)
   const [formdata, setformdata] = useState({
-    description: "",
-    amount: null,
-    category: "",
+    description:expenses?.description,
+    amount: expenses?.amount,
+    category: expenses?.category,
   });
   const [loading, setloading] = useState(false);
   const [isopen, setopen] = useState(false);
   const dispatch=useDispatch()
+  useEffect(()=>{
+       
+  },[selectedexpense])
 
   const changehandler = (e) => {
    const {name,value}=e.target
@@ -55,7 +59,7 @@ function Createexpense() {
     console.log(formdata);
     try {
       const res = await axios.post(
-        "http://localhost:9000/api/user/add",
+        `http://localhost:9000/api/user/update/${expenses._id}`,
         formdata,
         {
           headers: { "Content-Type": "application/json" },
@@ -87,13 +91,15 @@ function Createexpense() {
   };
   return (
     <div>
-      <Dialog open={isopen} onOpenChange={setopen}>
+      <Dialog className="p-5" open={isopen} onOpenChange={setopen}>
         <DialogTrigger>
-          <Button onClick={() => setopen(true)}>Add New Expense</Button>
+          <Button className="rounded-full text-white " onClick={()=>{
+
+          }}></Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add your expenses here</DialogTitle>
+            <DialogTitle>Update your expenses here</DialogTitle>
             <DialogDescription>Damn… track it for me pls 😂</DialogDescription>
           </DialogHeader>
           <form onSubmit={submithandler}>
@@ -168,4 +174,4 @@ function Createexpense() {
   );
 }
 
-export default Createexpense;
+export default Updateexpense;

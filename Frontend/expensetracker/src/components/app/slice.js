@@ -4,7 +4,8 @@ export const Slice = createSlice({
   name: "z",
   initialState: {
     loading:false,
-    user:null
+    user:null,
+    selectedexpense:null
   },
   reducers: {
     setloading:(state,action)=>{
@@ -12,8 +13,11 @@ export const Slice = createSlice({
     },
     authuser:(state,action)=>{
       state.user=action.payload
+    },
+    setselectedexpense:(state,action)=>{
+      state.selectedexpense=action.payload;
     }
   },
 });
-export const {setloading,authuser} = Slice.actions;
+export const {setloading,authuser,setselectedexpense} = Slice.actions;
 export default Slice.reducer;
