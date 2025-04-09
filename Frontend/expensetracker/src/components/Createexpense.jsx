@@ -157,7 +157,7 @@ function Createexpense() {
                     </Loader2>
                   </Button>
                 ) : (
-                  <Button type="submit">Update</Button>
+                  <Button type="submit">Add</Button>
                 )}
               </DialogFooter>
             </div>

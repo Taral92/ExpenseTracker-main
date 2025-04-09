@@ -7,7 +7,7 @@ router.route("/register").post(x.register);
 router.route("/login").post(x.login);
 router.route("/logout").post(x.logout);
 router.route("/add").post(auth, add.addexpense);
-router.route("/update/:id").post(auth, add.updateexpense);
+router.route("/update/:id").put(auth, add.updateexpense);
 router.route('/done/:id').put(auth,add.markasdone)
 router.route("/delete/:id").post(auth, add.removeexpense);
 router.route("/getallx").get(auth, add.getallexpenses);

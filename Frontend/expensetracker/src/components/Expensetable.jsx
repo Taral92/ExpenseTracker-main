@@ -49,6 +49,7 @@ export function Expensetable() {
     console.log(" expenses is not an array:", expenses);
   }
   const totalamount = expenses.reduce((acc, current) => {
+    if (!current || !current._id || typeof current.amount !== 'number') return acc;
     if (!checked[current._id]) {
       return acc + current.amount;
     }

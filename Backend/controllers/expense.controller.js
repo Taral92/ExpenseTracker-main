@@ -73,7 +73,7 @@ const getallexpenses = async (req, res) => {
     const category = req.query.category || null;
     console.log(category);
 
-    const done = req.query.done || null;
+    const done = req.query.done;
     console.log(done);
 
     if (category && category.toLowerCase !== "all") {

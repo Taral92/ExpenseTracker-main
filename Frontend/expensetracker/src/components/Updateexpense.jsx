@@ -27,7 +27,7 @@ import { setexpenses } from "./app/expenseslice";
 import { setselectedexpense } from "./app/slice";
 
 
-function Updateexpense() {
+function Updateexpense({expense}) {
   const {expenses,selectedexpense}=useSelector(store=>store.expenseslice)
   const [formdata, setformdata] = useState({
     description:expenses?.description,
@@ -58,8 +58,8 @@ function Updateexpense() {
     e.preventDefault();
     console.log(formdata);
     try {
-      const res = await axios.post(
-        `http://localhost:9000/api/user/update/${expenses._id}`,
+      const res = await axios.put(
+        `http://localhost:9000/api/user/update/${expense._id}`,
         formdata,
         {
           headers: { "Content-Type": "application/json" },
@@ -73,13 +73,17 @@ function Updateexpense() {
         category: "",
       })
          
-      dispatch(setexpenses([...expenses, res.data.expense]));
+      
 
       if (res.data.success) {
-        
-        toast.success(res.data.message || "Added");
+        const updatedexpenses = expenses.map((exp) =>
+          exp._id === expense._id ? res.data.expense : exp
+        );
+        dispatch(setexpenses(updatedexpenses));
+        toast.success(res.data.message || "Updated successfully");
         setopen(false);
-      } else {
+      }
+       else {
         toast.error("failed to send data to sevrer");
       }
       setloading(true);
@@ -94,7 +98,8 @@ function Updateexpense() {
       <Dialog className="p-5" open={isopen} onOpenChange={setopen}>
         <DialogTrigger>
           <Button className="rounded-full text-white " onClick={()=>{
-
+            dispatch(setselectedexpense(expense))
+          setopen(false)
           }}></Button>
         </DialogTrigger>
         <DialogContent>
